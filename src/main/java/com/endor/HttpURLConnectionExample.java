@@ -214,6 +214,55 @@ public class HttpURLConnectionExample {
         }
 
     }
+
+    public static String sendTRACE_2() throws IOException {
+    	String TRACE_URL = "http://localhost:8080/endor-webapp/httptrace";
+        URL obj = new URL(TRACE_URL);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("TRACE");
+        
+        /*
+        final Object target;
+        try {
+            
+            if (con instanceof HttpURLConnection) {
+                Field delegate = HttpURLConnection.class.getDeclaredField("delegate");
+                delegate.setAccessible(true);
+                target = delegate.get(con);
+            } else {
+                target = con;
+            }
+            final Field f = HttpURLConnection.class.getDeclaredField("method");
+            f.setAccessible(true);
+            f.set(target, "TRACE");
+        } catch (IllegalAccessException | NoSuchFieldException ex) {
+            throw new AssertionError(ex);
+        }*/
+        
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        int responseCode = con.getResponseCode();
+        System.out.println("TRACE Response Code :: " + responseCode);
+        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // print result
+            System.out.println(response.toString());
+            return response.toString();
+            
+        } else {
+            System.out.println("TRACE request fa worked");
+            return "Request Failed!!";
+        }
+
+    }
     
     private void setRequestMethod(final HttpURLConnection c, final String value) {
         
